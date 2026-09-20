@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ========== WELCOME SCREEN ========== -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+
+        <div class="welcome-content">
+            <div class="logo-wrap">
+                <div class="logo-icon">🌍</div>
+                <div>
+                    <h1 class="app-name">WeatherNow</h1>
+                    <p class="app-tagline">Real-time weather at your fingertips</p>
+                </div>
+            </div>
+
+            <div class="hero-text">
+                <h2>Know your weather,<br><span class="highlight">plan your day.</span></h2>
+                <p class="hero-desc">
+                    Search any city, woreda, or kebele worldwide — get live or historical
+                    weather for any day, month, or year. Free, no sign-up needed.
+                </p>
+            </div>
+
+            <div class="features-title">What this app shows you</div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌡️</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Temperature</span>
+                        <span class="feature-desc">Current / Max / Min °C</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💧</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Humidity</span>
+                        <span class="feature-desc">Air moisture level %</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💨</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Wind Speed</span>
+                        <span class="feature-desc">Max speed in km/h</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⛅</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Sky Condition</span>
+                        <span class="feature-desc">Clear, Rain, Snow…</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Any Date</span>
+                        <span class="feature-desc">Past (1940+) or future</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-info">
+                        <span class="feature-name">Anywhere</span>
+                        <span class="feature-desc">Kebele to country</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="cta-btn" id="get-started-btn">Get Started &nbsp;→</button>
+            <p class="free-note">✦ Free forever &nbsp;·&nbsp; No sign-up &nbsp;·&nbsp; No API key</p>
+        </div>
+    </div>
+
+    <!-- ========== APP SCREEN ========== -->
+    <div id="app-screen" class="app-screen" style="display:none;">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+
+        <div class="card">
+
+            <!-- Header -->
+            <div class="app-header">
+                <button class="back-btn" id="back-btn">← Back</button>
+                <span class="app-name-sm">🌍 WeatherNow</span>
+            </div>
+
+            <!-- Search -->
+            <div class="search">
+                <label for="city-input" class="visually-hidden">Enter city name</label>
+                <input type="text" id="city-input" placeholder="Search city, woreda, kebele..." spellcheck="false">
+                <button id="search-btn" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mode Toggle -->
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="btn-now" data-mode="now">🕐 Now</button>
+                <button class="mode-btn" id="btn-date" data-mode="date">📅 By Date</button>
+            </div>
+
+            <!-- Date Picker (hidden until By Date is selected) -->
+            <div class="date-picker-wrap" id="date-picker-wrap" style="display:none;">
+                <label class="date-label">Select Day / Date / Month / Year</label>
+                <input type="date" id="date-input" class="date-input">
+                <div class="date-display" id="date-display"></div>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" style="display:none;">
+                <div class="spinner"></div>
+                <p>Fetching weather...</p>
+            </div>
+
+            <!-- Error -->
+            <div class="error" style="display:none;">
+                <span class="error-icon">⚠️</span>
+                <p id="error-msg">Location not found. Please try again.</p>
+            </div>
+
+            <!-- Weather Result -->
+            <div class="weather" style="display:none;">
+                <!-- Date badge shown only in "By Date" mode -->
+                <div class="date-badge" id="date-badge" style="display:none;"></div>
+
+                <div class="weather-emoji" id="weather-emoji">🌤️</div>
+
+                <!-- Current mode: single temp -->
+                <div id="temp-current">
+                    <h1 class="temp" id="temp-val">--°C</h1>
+                </div>
+
+                <!-- Date mode: max / min temps -->
+                <div id="temp-range" style="display:none;">
+                    <div class="temp-range-wrap">
+                        <div class="temp-item">
+                            <span class="temp-arrow up">↑</span>
+                            <span class="temp-max" id="temp-max">--°C</span>
+                            <span class="temp-lbl">High</span>
+                        </div>
+                        <div class="temp-divider"></div>
+                        <div class="temp-item">
+                            <span class="temp-arrow down">↓</span>
+                            <span class="temp-min" id="temp-min">--°C</span>
+                            <span class="temp-lbl">Low</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="city" id="place-name">--</h2>
+                <p class="location-path" id="location-path"></p>
+                <p class="condition" id="condition-label">--</p>
+
+                <div class="details">
+                    <div class="col">
+                        <div class="detail-icon">💧</div>
+                        <div>
+                            <p class="humidity" id="humidity-val">--%</p>
+                            <p class="label">Humidity</p>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="col">
+                        <div class="detail-icon">💨</div>
+                        <div>
+                            <p class="wind" id="wind-val">-- km/h</p>
+                            <p class="label">Wind Speed</p>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="col" id="precip-col">
+                        <div class="detail-icon">🌧️</div>
+                        <div>
+                            <p class="precip" id="precip-val">-- mm</p>
+                            <p class="label">Rainfall</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Default hint -->
+            <div class="hint" id="hint-text">
+                <div class="hint-emoji">🔍</div>
+                <p>Search a location above<br>then choose Now or a Date</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
